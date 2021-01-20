@@ -4,14 +4,19 @@ Owner: "@mongodb/product-perf"
 # Demonstrate the InsertRemove actor. The InsertRemove actor is a simple actor that inserts and then
 # removes the same document from a collection in a loop. Each instance of the actor uses a different
 # document, indexed by an integer _id field. The actor records the latency of each insert and each remove.
+Clients:
+  Default:
+    QueryOptions:
+      maxPoolSize: 10000
 
 Actors:
 - Name: InsertRemoveTest
   Type: InsertRemove
-  Threads: 100
+  Threads: 1000
   Phases:
   - Collection: inserts
-    Duration: 3 minutes
+    Duration: 30 minutes
+    GlobalRate: 100 per 1 seconds
     Database: test
 
 AutoRun:
