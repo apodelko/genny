@@ -1,0 +1,91 @@
+SchemaVersion: 2018-07-01
+Owner: "@mongodb/product-perf"
+
+
+Clients:
+  Default:
+    QueryOptions:
+      maxPoolSize: 1000
+
+Actors:
+- Name: EnableSharding
+  Type: AdminCommand
+  Threads: 1
+  Phases:
+  - Repeat: 1
+    Database: admin
+    Operations:
+    - OperationMetricsName: EnableSharding
+      OperationName: AdminCommand
+      OperationCommand:
+        enableSharding: &db test
+  - &Nop {Nop: true}
+  - *Nop
+  - *Nop
+
+- Name: ShardCollection
+  Type: AdminCommand
+  Threads: 1
+  Phases:
+  - *Nop
+  - Repeat: 1
+    Database: admin
+    Operations:
+    - OperationMetricsName: ShardCollection
+      OperationName: AdminCommand
+      OperationCommand:
+        shardCollection: test.Collection0 # Collection0 is the default collection populated by the Loader.
+        key:
+          _id: hashed
+  - *Nop
+  - *Nop
+
+- Name: InsertData
+  Type: Loader
+  Threads: 1
+  Phases:
+  - *Nop
+  - *Nop
+  - ExternalPhaseConfig:
+      Path: ../../phases/execution/CreateIndexPhase.yml
+      Key: InsertData
+      Parameters:
+        db: *db
+  - *Nop
+
+- Name: TradingWorkload
+  Type: CrudActor
+  ClientName: Default
+  Database: *db
+  Threads: 500
+  Phases:
+  - *Nop
+  - *Nop
+  - *Nop
+  - Repeat: 10000
+    Collection: Collection0
+    Operations:
+    - OperationName: find
+      OperationCommand:
+        Filter: {'randomString': {'$regex': '^AA'}}
+        Options:
+          ReadPreference:
+            ReadMode: secondaryPreferred
+
+- Name: LoggingActor
+  Type: LoggingActor
+  Threads: 1 # must be 1
+  Phases:
+  - *Nop
+  - *Nop
+  - *Nop
+  - Phase: 3
+    LogEvery: 15 minutes # TimeSpec
+    Blocking: None # must be Blocking:None
+
+AutoRun:
+  Requires:
+    mongodb_setup:
+    - shard
+    - shard-lite
+    - shard-single
