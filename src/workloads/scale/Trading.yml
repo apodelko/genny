@@ -57,30 +57,32 @@ Actors:
   Type: CrudActor
   ClientName: Default
   Database: *db
-  Threads: 500
+  Threads: 1
   Phases:
   - *Nop
   - *Nop
   - *Nop
-  - Repeat: 10000
+  - Repeat: 1
     Collection: Collection0
     Operations:
-    - OperationName: find
+    - OperationName: countDocuments
       OperationCommand:
         Filter: {'randomString': {'$regex': '^AA'}}
         Options:
           ReadPreference:
-            ReadMode: secondaryPreferred
+            ReadMode: secondary
 
 - Name: LoggingActor
   Type: LoggingActor
   Threads: 1 # must be 1
   Phases:
-  - *Nop
-  - *Nop
-  - *Nop
-  - Phase: 3
-    LogEvery: 15 minutes # TimeSpec
+  - LogEvery: 1 second # TimeSpec
+    Blocking: None # must be Blocking:None
+  - LogEvery: 1 second # TimeSpec
+    Blocking: None # must be Blocking:None
+  - LogEvery: 1 second # TimeSpec
+    Blocking: None # must be Blocking:None
+  - LogEvery: 1 second # TimeSpec
     Blocking: None # must be Blocking:None
 
 AutoRun:
