@@ -62,7 +62,7 @@ Actors:
   - *Nop
   - *Nop
   - *Nop
-  - Repeat: 1
+  - Repeat: 100
     Collection: Collection0
     Operations:
     - OperationName: countDocuments
@@ -70,19 +70,19 @@ Actors:
         Filter: {'randomString': {'$regex': '^AA'}}
         Options:
           ReadPreference:
-            ReadMode: secondary
+            ReadMode: secondaryPreferred
 
 - Name: LoggingActor
   Type: LoggingActor
   Threads: 1 # must be 1
   Phases:
-  - LogEvery: 1 second # TimeSpec
+  - LogEvery: 10 second # TimeSpec
     Blocking: None # must be Blocking:None
-  - LogEvery: 1 second # TimeSpec
+  - LogEvery: 10 second # TimeSpec
     Blocking: None # must be Blocking:None
-  - LogEvery: 1 second # TimeSpec
+  - LogEvery: 10 second # TimeSpec
     Blocking: None # must be Blocking:None
-  - LogEvery: 1 second # TimeSpec
+  - LogEvery: 1 minute # TimeSpec
     Blocking: None # must be Blocking:None
 
 AutoRun:
