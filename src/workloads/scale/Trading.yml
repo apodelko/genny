@@ -57,15 +57,15 @@ Actors:
   Type: CrudActor
   ClientName: Default
   Database: *db
-  Threads: 500
+  Threads: 1
   Phases:
   - *Nop
   - *Nop
   - *Nop
-  - Repeat: 1000
+  - Repeat: 100
     Collection: Collection0
     Operations:
-    - OperationName: countDocuments
+    - OperationName: find
       OperationCommand:
         Filter: {'randomString': {'$regex': '^AA'}}
         Options:
