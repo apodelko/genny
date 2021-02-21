@@ -57,12 +57,12 @@ Actors:
   Type: CrudActor
   ClientName: Default
   Database: *db
-  Threads: 1
+  Threads: 500
   Phases:
   - *Nop
   - *Nop
   - *Nop
-  - Repeat: 100
+  - Repeat: 1000
     Collection: Collection0
     Operations:
     - OperationName: countDocuments
