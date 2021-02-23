@@ -62,10 +62,10 @@ Actors:
   - *Nop
   - *Nop
   - *Nop
-  - Repeat: 50000
+  - Repeat: 100000
     Collection: Collection0
     Operations:
-    - OperationName: findOne
+    - OperationName: find
       OperationCommand:
         Filter: {'randomString': {'$regex': '^AA'}}
         Options:
