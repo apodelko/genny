@@ -36,7 +36,7 @@ Actors:
       OperationCommand:
         shardCollection: test.Collection0 # Collection0 is the default collection populated by the Loader.
         key:
-          _id: hashed
+          _id: 1
   - *Nop
   - *Nop
 
@@ -46,28 +46,35 @@ Actors:
   Phases:
   - *Nop
   - *Nop
-  - ExternalPhaseConfig:
-      Path: ../../phases/execution/CreateIndexPhase.yml
-      Key: InsertData
-      Parameters:
-        db: *db
+  - Repeat: 1
+    Database: *db
+    CollectionCount: 1
+    DocumentCount: 150000
+    BatchSize: 10000
+    Document:
+      _id: {^Inc: {start: 1000}}
+      date: &date {^RandomDate: {min: "2020-01-01", max: {^Now: {}}}}
+      ticker: &ticker {^RandomString: {length: 3}}
+      price: &price {^Join: {array: [^RandomInt: {min: 0, max: 1000},".",^RandomInt: {min: 0, max: 99}]}}
+      quantity: &quantity {^RandomInt: {min: 0, max: 1000}}
+      fee: &fee {^RandomInt: {min: 0, max: 1000}}
   - *Nop
 
 - Name: TradingWorkload
   Type: CrudActor
   ClientName: Default
   Database: *db
-  Threads: 500
+  Threads: 1
   Phases:
   - *Nop
   - *Nop
   - *Nop
-  - Repeat: 100000
+  - Repeat: 10
     Collection: Collection0
     Operations:
     - OperationName: find
       OperationCommand:
-        Filter: {'randomString': {'$regex': '^AA'}}
+        Filter: {_id: {^RandomInt: {min: 1000, max: 10000}}}
         Options:
           ReadPreference:
             ReadMode: secondaryPreferred
