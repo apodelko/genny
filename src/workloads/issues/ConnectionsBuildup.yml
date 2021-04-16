@@ -15,47 +15,47 @@ Clients:
       maxPoolSize: 1000
 
 Actors:
-- Name: EnableSharding
-  Type: AdminCommand
-  Threads: 1
-  Phases:
-  - Repeat: 1
-    Database: admin
-    Operations:
-    - OperationMetricsName: EnableSharding
-      OperationName: AdminCommand
-      OperationCommand:
-        enableSharding: &db test
-  - &Nop {Nop: true}
-  - *Nop
-  - *Nop
+#- Name: EnableSharding
+#  Type: AdminCommand
+#  Threads: 1
+#  Phases:
+#  - Repeat: 1
+#    Database: admin
+#    Operations:
+#    - OperationMetricsName: EnableSharding
+#      OperationName: AdminCommand
+#      OperationCommand:
+#        enableSharding: &db test
+#  - &Nop {Nop: true}
+#  - *Nop
+#  - *Nop
 
-- Name: ShardCollection
-  Type: AdminCommand
-  Threads: 1
-  Phases:
-  - *Nop
-  - Repeat: 1
-    Database: admin
-    Operations:
-    - OperationMetricsName: ShardCollection
-      OperationName: AdminCommand
-      OperationCommand:
-        shardCollection: test.Collection0  # Collection0 is the default collection populated by the Loader.
-        key:
-          _id: 1
-  - *Nop
-  - *Nop
+#- Name: ShardCollection
+#  Type: AdminCommand
+#  Threads: 1
+#  Phases:
+#  - *Nop
+#  - Repeat: 1
+#    Database: admin
+#    Operations:
+#    - OperationMetricsName: ShardCollection
+#      OperationName: AdminCommand
+#      OperationCommand:
+#        shardCollection: test.Collection0 # Collection0 is the default collection populated by the Loader.
+#        key:
+#          _id: 1
+#  - *Nop
+#  - *Nop
 
 - Name: InsertData
   Type: Loader
   Threads: 1
   Phases:
-  - *Nop
-  - *Nop
+#  - *Nop
+#  - *Nop
   - Repeat: 1
     Threads: 1
-    Database: *db
+    Database: &db test
     CollectionCount: 1
     DocumentCount: 50000
     BatchSize: 10000
@@ -66,7 +66,7 @@ Actors:
       price: &price {^RandomInt: {min: 1, max: 1000}}
       quantity: &quantity {^RandomInt: {min: 1, max: 1000}}
       fee: &fee {^RandomInt: {min: 0, max: 1000}}
-  - *Nop
+  - &Nop {Nop: true}
 
 - Name: ConnectionsBuildup
   Type: CrudActor
@@ -74,8 +74,8 @@ Actors:
   Database: *db
   Threads: 500
   Phases:
-  - *Nop
-  - *Nop
+#  - *Nop
+#  - *Nop
   - *Nop
   - Repeat: 30000
     Collection: Collection0
@@ -92,16 +92,17 @@ Actors:
   Type: LoggingActor
   Threads: 1  # must be 1
   Phases:
-  - LogEvery: 10 second  # TimeSpec
-    Blocking: None  # must be Blocking:None
-  - LogEvery: 10 second  # TimeSpec
-    Blocking: None  # must be Blocking:None
-  - LogEvery: 10 second  # TimeSpec
-    Blocking: None  # must be Blocking:None
-  - LogEvery: 1 minute  # TimeSpec
-    Blocking: None  # must be Blocking:None
+#  - LogEvery: 10 second # TimeSpec
+#    Blocking: None # must be Blocking:None
+#  - LogEvery: 10 second # TimeSpec
+#    Blocking: None # must be Blocking:None
+  - LogEvery: 10 second # TimeSpec
+    Blocking: None # must be Blocking:None
+  - LogEvery: 1 minute # TimeSpec
+    Blocking: None # must be Blocking:None
 
 AutoRun:
 - When:
     mongodb_setup:
-      $eq: shard-single
+#    - shard-single
+     - single-replica
