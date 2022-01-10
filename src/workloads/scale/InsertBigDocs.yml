@@ -29,3 +29,4 @@ AutoRun:
       - replica
       - replica-all-feature-flags
       - single-replica
+      - atlas-like-replica

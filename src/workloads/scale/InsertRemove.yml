@@ -33,3 +33,4 @@ AutoRun:
       - shard
       - replica-1dayhistory-15gbwtcache
       - replica-all-feature-flags
+      - atlas-like-replica

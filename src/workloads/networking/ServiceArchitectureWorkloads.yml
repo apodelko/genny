@@ -79,3 +79,4 @@ AutoRun:
       - replica
       - replica-noflowcontrol
       - replica-all-feature-flags
+      - atlas-like-replica

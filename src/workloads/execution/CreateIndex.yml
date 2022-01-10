@@ -69,6 +69,7 @@ AutoRun:
       - replica
       - single-replica
       - standalone
+      - atlas-like-replica
     branch_name:
       $neq:
       - v4.0

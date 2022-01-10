@@ -134,3 +134,4 @@ AutoRun:
       - replica-all-feature-flags
       - single-replica
       - standalone
+      - atlas-like-replica
