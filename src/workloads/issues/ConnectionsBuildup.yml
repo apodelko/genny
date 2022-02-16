@@ -104,5 +104,6 @@ Actors:
 AutoRun:
 - When:
     mongodb_setup:
+      $eq:
+      - single-replica
 #    - shard-single
-     - single-replica
